@@ -1,0 +1,27 @@
+image: registry.gitlab.heu.cz/docker-tools/pipelines:v4
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  CI_NAMESPACE: matching-ng
+  IMAGE: "registry.gitlab.heu.cz/catalogue/matching-ng/candy"
+  TAG: "$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHA"
+  TAG_BEFORE: "$CI_COMMIT_REF_SLUG-$CI_COMMIT_BEFORE_SHA"
+  DEPLOY_NAME: candy
+  GIT_SSL_NO_VERIFY: "true"
+
+stages:
+  - build
+  - test
+  - deploy
+  - cleanup
+
+include:
+  - local: .gitlab/ci/build.yml
+  - local: .gitlab/ci/test.yml
+  - local: .gitlab/ci/review.yml
+  - local: .gitlab/ci/review_oc.yml
+  - local: .gitlab/ci/stage.yml
+  - local: .gitlab/ci/stage_oc.yml
+  - local: .gitlab/ci/production.yml
+  - local: .gitlab/ci/production_oc.yml
+  - local: .gitlab/ci/extract.yml

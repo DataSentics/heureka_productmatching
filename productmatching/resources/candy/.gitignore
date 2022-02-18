@@ -1,0 +1,15 @@
+.idea/
+!.idea/runConfigurations/
+
+.vscode
+.code
+.history
+
+__pycache__
+.pytest_cache
+
+secrets.env
+*.txt
+*.tsv
+
+.mdcompose

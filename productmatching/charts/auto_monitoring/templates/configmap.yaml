@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "auto-monitoring.fullname" . }}-configmap
+  namespace: {{ .Release.Namespace }}
+data:
+  IMAGE_TAG: {{ .Values.IMAGE_TAG | quote }}
+  DEXTER_DB_PASSWORD: {{ .Values.DEXTER_DB_PASSWORD | quote }}
+  MLFLOW_S3_ENDPOINT_URL: {{ .Values.MLFLOW_S3_ENDPOINT_URL | quote }}
+  MLFLOW_TRACKING_URI: {{ .Values.MLFLOW_TRACKING_URI | quote }}
+  AWS_ACCESS_KEY_ID: {{ .Values.s3.accessKey | quote }}
+  AWS_SECRET_ACCESS_KEY: {{ .Values.s3.secretKey | quote }}
+  MATCHAPI_CONFIG_FILE: {{ .Values.MATCHAPI_CONFIG_FILE | quote }}
+  MATCHAPI_ALLOW_DISABLE: {{ .Values.MATCHAPI_ALLOW_DISABLE | quote }}
+  TRIGGER_RETRAINING: {{ .Values.TRIGGER_RETRAINING | quote }}
+  OPSGENIE_API_KEY: {{ .Values.OPSGENIE_API_KEY | quote }}
+  TARGET_ENVIRONMENT: {{ .Values.TARGET_ENVIRONMENT }}
+  TRIGGER_TOKEN: {{ .Values.TRIGGER_TOKEN | quote }}
+  REF: {{ .Values.REF | quote }}

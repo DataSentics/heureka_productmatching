@@ -1,0 +1,296 @@
+{
+    "@scheme": "https",
+    "@path": "/",
+
+    "{env}=production": {"@host": "heureka.{lang}"},
+    "{env}=dev": {"@host": "{wc}.heureka.{lang}.dev.czech"},
+
+    "heureka": {
+        "{env}=production": {"@host": "www.heureka.{lang}"},
+        "{env}=dev": {"@host": "www.{wc}.heureka.{lang}.dev.czech"},
+
+        "category": {
+            "{env}=production": {"@host": "{category_seo}.heureka.{lang}"},
+            "{env}=dev": {"@host": "{category_seo}.{wc}.heureka.{lang}.dev.czech"},
+
+            "image": {
+              "@host": "im9.cz",
+              "{lang}=cz": {"@path": "iR/{image_path}/{image_hash}{size}.jpg"},
+              "{lang}=sk": {"@path": "{lang}/iR/{image_path}/{image_hash}{size}.jpg"}
+            },
+            
+            "questions": {
+                "index": {
+                    "@path": "poradna/"
+                },
+                "ask_question": {
+                    "@path": "polozit-otazku/",
+                    "@fragment": "addquestion"
+                }
+            },
+            
+            "advisor_article": {
+                "@path": "poradna/{advisor_slug}/"
+            }
+        },
+
+        "image": {
+            "{env}=production": {"@host": "im9.cz"},
+            "{env}=development": {"@host": "0.im9.cz.dev.czech"},
+
+            "user": {
+                "avatar": {
+                  "{lang}=cz": {"@path": "iR/{image_path}/{user_id}{size}.png"},
+                  "{lang}=sk": {"@path": "{lang}/iR/{image_path}/{user_id}{size}.png"}
+                }
+            },
+            "shop": {
+                "logo": {
+                  "{lang}=cz": {"@path": "iR/importobchod-orig/{shop_id}_logo{size}.png"},
+                  "{lang}=sk": {"@path": "{lang}/iR/importobchod-orig/{shop_id}_logo{size}.png"}
+                }
+            },
+            "product": {
+                "short_tail_description": {
+                    "{lang}=cz": {"@path": "iR/{image_path}/{block_id}{size}.jpg"},
+                    "{lang}=sk": {"@path": "{lang}/iR/{image_path}/{block_id}{size}.jpg"}
+                }
+            }
+        },
+
+
+        "product": {
+          "{env}=production": {
+            "@host": "{category_seo}.heureka.{lang}"
+          },
+          "{env}=dev": {
+            "@host": "{category_seo}.{wc}.heureka.{lang}.dev.czech"
+          },
+          "@path": "{product_seo}/",
+          "specification": {
+            "@path": "{product_seo}/specifikace",
+            "@fragment": "section"
+          },
+          "reviews": {
+            "@path": "{product_seo}/recenze",
+            "@fragment": "section"
+          },
+          "image": {
+            "@host": "im9.cz",
+            "{lang}=cz": {"@path": "iR/{image_path}/{image_hash}{size}.jpg"},
+            "{lang}=sk": {"@path": "{lang}/iR/{image_path}/{image_hash}{size}.jpg"}
+          },
+          "image3d": {
+            "@host": "www.heureka.{lang}",
+            "@path": "direct/gallery-3d/?hash={hash}&vn={view_number}",
+            "thumbnail": {
+                "@host": "im9.cz",
+                "@path": "3d/{hash}/preview.jpg"
+            }
+          },
+          "document": {
+              "@host": "im9.cz",
+              "{lang}=cz": {"@path": "{pool}/{oid}/{label}"},
+              "{lang}=sk": {"@path": "{lang}/{pool}/{oid}/{label}"}
+          }
+        },
+
+        "offer": {
+            "image": {
+              "@host": "im9.cz",
+              "{lang}=cz": {"@path": "iR/{image_path}/{image_hash}{size}.jpg"},
+              "{lang}=sk": {"@path": "{lang}/iR/{image_path}/{image_hash}{size}.jpg"}
+            },
+            "exit": {
+              "@path": "exit/{shop_slug}/{offer_id}/",
+              "@query": {
+                  "source": "z",
+                  "position": "p",
+                  "bidding_box": "tb",
+                  "force_category_minimal_price": "fcmp",
+                  "additional_offer": "ao"
+              }
+            }
+        },
+
+        "shopping_cart": {
+            "@path": "/kosik/"
+        },
+
+        "shop_administration": {
+            "{env}=production": {"@host": "sluzby.heureka.{lang}"},
+            "{env}=dev": {"@host": "sluzby.{wc}.heureka.{lang}.dev.czech"}
+        },
+
+        "direct": {
+            "affiliate_banners": {
+                "@path": "direct/bannery/preview.php"
+            }
+        }
+    },
+
+    "mheureka": {
+        "{env}=production": {"@host": "m.heureka.{lang}"},
+        "{env}=dev": {"@host": "m.{wc}.heureka.{lang}.dev.czech"},
+
+        "search": {
+            "@path": "/hledat/"
+        },
+
+        "shopping_cart": {
+            "@path": "/kosik/"
+        },
+
+        "category": {
+            "@path": "/{category_seo}/",
+            "@query": {
+                "filter_string": "p"
+            }
+        },
+
+        "product": {
+            "@path": "/{category_seo}/{product_seo}/"
+        }
+    },
+
+    "user_account": {
+        "{env}=production": {"@host": "ucet.heureka.{lang}"},
+        "{env}=dev": {"@host": "ucet.{wc}.heureka.{lang}.dev.czech"},
+
+        "login": {
+            "{lang}=cz": {"@path": "/prihlaseni"},
+            "{lang}=sk": {"@path": "/prihlasenie"},
+
+            "@query": {
+                "callback_url": "callbackUrl"
+            }
+        },
+
+        "logout": {
+            "{lang}=cz": {"@path": "/odhlaseni"},
+            "{lang}=sk": {"@path": "/odhlasenie"}
+        },
+
+        "registration": {
+            "{lang}=cz": {"@path": "/registrace"},
+            "{lang}=sk": {"@path": "/registracia"}
+        },
+
+        "password_reset": {
+            "@path": "/obnova-hesla"
+        },
+
+        "dashboard": {
+            "@path": "/"
+        },
+
+        "orders": {
+            "@path": "/objednavky",
+
+            "detail": {
+                "@path": "/objednavky/{order_id}"
+            },
+
+            "inquiry": {
+                "{lang}=cz": {"@path": "/objednavky/{order_id}/dotaz"},
+                "{lang}=sk": {"@path": "/objednavky/{order_id}/otazka"}
+            }
+        },
+
+        "favorites": {
+            "{lang}=cz": {"@path": "/oblibene"},
+            "{lang}=sk": {"@path": "/oblubene"}
+        },
+
+        "reviews": {
+            "{lang}=cz": {"@path": "/recenze"},
+            "{lang}=sk": {"@path": "/recenzie"}
+        },
+
+        "price_watch": {
+            "{lang}=cz": {"@path": "/hlidani-cen"},
+            "{lang}=sk": {"@path": "/hlidane-ceny"}
+        },
+
+        "settings": {
+            "{lang}=cz": {"@path": "/nastaveni"},
+            "{lang}=sk": {"@path": "/nastavenie"},
+
+            "address" : {
+                "@fragment": "dorucovaci-adresy"
+            },
+
+            "billing" : {
+                "@fragment": "fakturacni-udaje"
+            },
+
+            "password" : {
+                "@fragment": "zmena-hesla"
+            },
+
+            "newsletter" : {
+                "@fragment": "zasilani-emailu"
+            },
+
+            "personal_info" : {
+                "@fragment": "osobni-informace"
+            },
+
+            "credit_cards" : {
+                "@fragment": "platebni-karty"
+            }
+        }
+    },
+
+
+    "shop_detail": {
+        "{env}=production": {"@host": "obchody.heureka.{lang}"},
+        "{env}=dev": {"@host": "obchody.{wc}.heureka.{lang}.dev.czech"},
+
+        "index": {
+            "@path": "/"
+        },
+
+        "category": {
+            "@path": "/{category_slug}/"
+        },
+
+        "shop": {
+            "@path": "/{shop_slug}/"
+        },
+
+        "reviews": {
+            "@path": "/{shop_slug}/recenze/",
+            "@query": {
+                "page_index": "f"
+            },
+
+            "verified": {
+                "@path": "/{shop_slug}/recenze/overene"
+            },
+
+            "positive": {
+                "@path": "/{shop_slug}/recenze/pozitivni"
+            },
+
+            "negative": {
+                "@path": "/{shop_slug}/recenze/negativni"
+            },
+
+            "add": {
+                "@path": "/{shop_slug}/recenze/pridat"
+            }
+        },
+
+        "discussions": {
+            "@path": "/{shop_slug}/diskuze/",
+            "@query": {
+                "page_index": "f"
+            }
+        },
+
+        "branches": {
+            "@path":"/{shop_slug}/vydejni-mista/"
+        }
+    }
+}

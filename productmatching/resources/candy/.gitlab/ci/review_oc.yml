@@ -1,0 +1,62 @@
+variables:
+  KUBE_NAMESPACE_STAGE: "one-catalogue-stage"
+  GCR_STAGE_IMAGE: eu.gcr.io/one-catalogue/candy
+
+review_oc:
+  stage: deploy
+  image: registry.gitlab.heu.cz/one-catalogue/oc-pipeline-image:v4
+  services:
+    - registry.gitlab.heu.cz/docker-tools/dind:v1
+  needs:
+    - build
+    - test
+  variables:
+    OC_DEPLOYER_PRIVATE_KEY: $OC_DEPLOYER_STAGE_PRIVATE_KEY
+  before_script:
+    - oc_gitlab_auth
+    - oc_gcp_auth
+  script:
+    - docker pull "$IMAGE:$TAG"
+    - docker tag "$IMAGE:$TAG" "$GCR_STAGE_IMAGE:$TAG"
+    - docker push "$GCR_STAGE_IMAGE:$TAG"
+    - helm3 upgrade
+      --namespace="$KUBE_NAMESPACE_STAGE"
+      --install
+      --wait
+      --set image.repository="$GCR_STAGE_IMAGE"
+      --set image.tag="$TAG"
+      --set vault.token="$OC_VAULT_TOKEN_STAGE"
+      --values chart/values_oc_stage.yaml
+      "$DEPLOY_NAME-$CI_COMMIT_REF_SLUG-oc" chart/
+    - 'curl -d "{\"text\": \"$GITLAB_USER_NAME deployed stage Candy into $KUBE_NAMESPACE_STAGE\"}" -H "Content-Type: application/json" -X POST https://hooks.slack.com/services/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'
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    on_stop: stop_review_oc
+  only:
+    refs:
+      - branches
+  except:
+    - master
+
+  when: manual
+
+stop_review_oc:
+  stage: cleanup
+  image: registry.gitlab.heu.cz/one-catalogue/oc-pipeline-image:v4
+  variables:
+    GIT_STRATEGY: none
+    OC_DEPLOYER_PRIVATE_KEY: $OC_DEPLOYER_STAGE_PRIVATE_KEY
+  before_script:
+    - oc_gcp_auth
+  script:
+    - helm3 delete --namespace="$KUBE_NAMESPACE_STAGE" "$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG-oc"
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    action: stop
+  when: manual
+  allow_failure: true
+  only:
+    refs:
+      - branches
+  except:
+    - master

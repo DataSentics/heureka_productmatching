@@ -1,0 +1,18 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ template "transformer.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "transformer.name" . }}
+    chart: {{ template "transformer.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  maxReplicas: {{ .Values.hpa_transformer.maxReplicas }}
+  minReplicas: {{ .Values.hpa_transformer.minReplicas }}
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ template "transformer.fullname" . }}
+  targetCPUUtilizationPercentage: {{ .Values.hpa_transformer.targetCPUUtilizationPercentage }}

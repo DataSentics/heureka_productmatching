@@ -1,0 +1,25 @@
+{{- if eq .Values.jobs.enabled false -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "candy.fullname" . }}
+  labels:
+    app: {{ template "candy.name" . }}
+    {{- if eq .Values.FEATURE_OC "true" }}
+    release: prometheus-operator
+    {{- else }}
+    prometheus: purple-prometheus
+    {{- end }}
+spec:
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      app: {{ template "candy.name" . }}
+      release: {{ .Release.Name }}
+  endpoints:
+    - port: metrics
+      interval: 10s
+      path: /
+{{- end -}}

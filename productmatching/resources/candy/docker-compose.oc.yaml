@@ -1,0 +1,18 @@
+version: "3"
+services:
+  candy:
+    environment:
+      CANDY_LANGUAGE: "-"
+      CANDY_CATALOGUE: "http://oc-catalogue.stage.gke.hdc2.cz/"
+      CANDY_FAISS: "http://indexer-api.stage.gke.hdc2.cz/"  # Placeholder
+      CANDY_SUPPORTED_CATEGORIES: "1963"  # Placeholder
+      CANDY_CANDIDATES_PROVIDERS: "faiss"
+      CANDY_USE_IMAGESIMILARITY: 0
+      CANDY_PRIORITIZE_STATUS: "false"
+
+  matching_rerun:
+    command: bash -c "cd statistics && python3 matching_rerun.py"
+    environment:
+      CANDY_LANGUAGE: "-"
+      CANDY_SUPPORTED_CATEGORIES: "1963"  # Placeholder
+      CANDY_CANDIDATES_PROVIDERS: "faiss"

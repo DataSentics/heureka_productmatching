@@ -1,0 +1,38 @@
+{
+  "2000": {
+    "keywords": [
+        ["new"],
+        ["now"],
+        ["maitenance"],
+        ["grain free", "gf"],
+        ["glutan free", "gf"],
+        ["premium"],
+        ["super premium", "sp"],
+        ["hypoallergenic"]
+    ],
+    "velikost plemene": [
+            ["vsechny"],
+            ["male"],
+            ["stredni"],
+            ["velke"]
+        ],
+    "aktivita psa": [
+      ["bezna"],
+      ["mladata vyvinu"],
+      ["nizka"],
+      ["vysoka"]
+    ]
+  },
+  "1800": {
+    "dogfood": [
+        ["new"],
+        ["now"],
+        ["maitenance"],
+        ["grain free", "gf"],
+        ["glutan free", "gf"],
+        ["premium"],
+        ["super premium", "sp"],
+        ["hypoallergenic"]
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+version: "3"
+services:
+  candy:
+    environment:
+      CANDY_LANGUAGE: "cz"
+      CANDY_CATALOGUE: "http://catalogue-catalogue-service2.cz.stage.k8s.heu.cz/v1/"
+      CANDY_FAISS: "http://indexer-api.cz.stage.k8s.heu.cz/"
+      CANDY_ELASTIC_ADDRESS: "https://e0c31b9d02414c118bb51360eed4767b.europe-west3.gcp.cloud.es.io:9243"
+      CANDY_ELASTIC_CANDIDATES_INDEX: "search-products-stage-cz"
+      CANDY_SUPPORTED_CATEGORIES: "1962,1963"
+      CANDY_CANDIDATES_PROVIDERS: "elastic"
+      CANDY_USE_IMAGESIMILARITY: 0
+      CANDY_VAULT_ENABLED: "true"
+      CANDY_VAULT_ADDR: "http://vault.stage.k8s.heu.cz/"
+      CANDY_VAULT_OC_MOUNT_POINT: "one-catalogue/stage"
+      CANDY_VAULT_ML_MOUNT_POINT: "matching"
+      CANDY_VAULT_ELASTIC_PATH: "elastic"
+      CANDY_MATCHAPI_BASE: "http://productmatching.matchapi.@@.stage.k8s.heu.cz/v1/"
+      CANDY_MATCHAPI_CONFIG_FILE: "s3://matchapi-data-cz/matchapi_id_categories_mapping.json"
+      CANDY_MATCHAPI_DEFAULT_UNKNOWN: "true"
+      CANDY_PRIORITIZE_STATUS: "true"
+      CANDY_REMOVE_LONGTAIL: "true"
+    ports:
+      - 5000:5000
+    depends_on:
+      - redis
+
+  tests:
+    environment:
+      CANDY_LANGUAGE: "cz"
+      CANDY_CATALOGUE: "mock_catalogue"
+      CANDY_SUPPORTED_CATEGORIES: "123,2,234,342,45"
+      CANDY_CANDIDATES_PROVIDERS: "faiss,elastic"
+    command: python3 -m pytest -vv tests -o log_cli=true --log-cli-level=DEBUG --capture=no
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    restart: always
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - 8081:8081
+
+  extract:
+    command: bash -c "cd statistics && python3 extract.py"
+
+  matching_rerun:
+    command: bash -c "cd statistics && python3 matching_rerun.py"
+    environment:
+      CANDY_LANGUAGE: "cz"
+      CANDY_SUPPORTED_CATEGORIES: "1963"
+      CANDY_CANDIDATES_PROVIDERS: "faiss, elastic"

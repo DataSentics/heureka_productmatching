@@ -1,0 +1,65 @@
+production_cz:
+  stage: deploy
+  services:
+    - registry.gitlab.heu.cz/docker-tools/dind:v1
+  before_script:
+    - rm /root/.kube/config; cp /secrets/secrets/.kube-config /root/.kube/config
+    - kubectl config set-credentials production --token="$KUBE_TOKEN_PRODUCTION"
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker pull "$IMAGE:$TAG"
+    - docker tag "$IMAGE:$TAG" "$IMAGE/$CI_ENVIRONMENT_SLUG:$TAG"
+    - docker push "$IMAGE/$CI_ENVIRONMENT_SLUG:$TAG"
+    - helm3 dependency build chart/
+    - echo "$HELM_VALUES_PRODUCTION_CZ" > /tmp/values.yaml
+    - helm3 upgrade
+        --namespace="$CI_NAMESPACE"
+        --install
+        --wait
+        --timeout 600s
+        --set image.repository="$IMAGE/$CI_ENVIRONMENT_SLUG"
+        --set image.tag="$TAG"
+        --set vault.token="$VAULT_TOKEN_PROD"
+        --values /tmp/values.yaml
+        --kube-context production
+        "$DEPLOY_NAME-cz" chart/
+    - 'curl -d "{\"text\": \"$GITLAB_USER_NAME deployed candy CZ\"}" -H "Content-Type: application/json" -X POST https://hooks.slack.com/services/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'
+  environment:
+    name: production
+  when: manual
+  only:
+    refs:
+      - master
+
+production_sk:
+  stage: deploy
+  services:
+    - registry.gitlab.heu.cz/docker-tools/dind:v1
+  before_script:
+    - rm /root/.kube/config; cp /secrets/secrets/.kube-config /root/.kube/config
+    - kubectl config set-credentials production --token="$KUBE_TOKEN_PRODUCTION"
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker pull "$IMAGE:$TAG"
+    - docker tag "$IMAGE:$TAG" "$IMAGE/$CI_ENVIRONMENT_SLUG:$TAG"
+    - docker push "$IMAGE/$CI_ENVIRONMENT_SLUG:$TAG"
+    - helm3 dependency build chart/
+    - echo "$HELM_VALUES_PRODUCTION_SK" > /tmp/values.yaml
+    - helm3 upgrade
+        --namespace="$CI_NAMESPACE"
+        --install
+        --wait
+        --timeout 600s
+        --set image.repository="$IMAGE/$CI_ENVIRONMENT_SLUG"
+        --set image.tag="$TAG"
+        --set vault.token="$VAULT_TOKEN_PROD"
+        --values /tmp/values.yaml
+        --kube-context production
+        "$DEPLOY_NAME-sk" chart/
+    - 'curl -d "{\"text\": \"$GITLAB_USER_NAME deployed candy SK \"}" -H "Content-Type: application/json" -X POST https://hooks.slack.com/services/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'
+  environment:
+    name: production
+  when: manual
+  only:
+    refs:
+      - master

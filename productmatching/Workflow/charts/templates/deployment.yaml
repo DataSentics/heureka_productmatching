@@ -1,0 +1,83 @@
+apiVersion:  batch/v1
+kind: Job
+metadata:
+  name: {{ template "workflow.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  template:
+    metadata:
+      name:  {{ template "workflow.fullname" . }}
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      containers:
+        - name:  {{ template "workflow.fullname" . }}
+          imagePullPolicy: Always
+          image: registry.gitlab.heu.cz/catalogue/matching-ng/productmatching/workflow:{{ .Values.IMAGE_TAG }}
+
+          env:
+            - name: MLFLOW_S3_ENDPOINT_URL
+              value: https://s3.heu.cz/
+            - name: DOCKER_HOST
+              value: unix://var/run/docker/docker.sock
+            - name: WEBHOOK_URL
+              value: "https://hooks.slack.com/services/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"
+
+          envFrom:
+            - configMapRef:
+                name: {{ template "workflow.fullname" . }}-configmap
+            - secretRef:
+                name: workflow-storage
+
+          volumeMounts:
+            - name: docker-socket
+              mountPath: /var/run/docker
+            - name: prod-serviceacount
+              mountPath: /root/.kube/
+
+          readinessProbe:
+            initialDelaySeconds: 30
+            failureThreshold: 3
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - stat $(find /tmp -name stamp -mmin -1)
+
+          livenessProbe:
+            periodSeconds: 30
+            initialDelaySeconds: 30
+            failureThreshold: 10
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - stat $(find /tmp -name stamp -mmin -1)
+
+        - name: dind-daemon
+          image: docker:dind
+          env:
+            - name: DOCKER_HOST
+              value: unix://var/run/docker/docker.sock
+          resources:
+            requests:
+              cpu: 20m
+              memory: 512Mi
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: docker-storage
+              mountPath: /var/lib/docker
+            - name: docker-socket
+              mountPath: /var/run/docker
+
+      volumes:
+        - name: docker-storage
+          emptyDir: {}
+
+        - name: docker-socket
+          emptyDir: {}
+
+        - name: prod-serviceacount
+          secret:
+            secretName: ml-workflow-token

@@ -1,0 +1,13 @@
+version: "3"
+services:
+  candy:
+    environment:
+      CANDY_KAFKA_BOOTSTRAP_SERVERS: "pkc-4ygn6.europe-west3.gcp.confluent.cloud:9092"
+    env_file:
+      - secrets.env
+
+  extract:
+    environment:
+      CANDY_KAFKA_BOOTSTRAP_SERVERS: "pkc-4ygn6.europe-west3.gcp.confluent.cloud:9092"
+    env_file:
+      - secrets.env

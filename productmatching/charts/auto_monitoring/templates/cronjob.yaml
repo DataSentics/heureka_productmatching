@@ -1,0 +1,52 @@
+apiVersion:  batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "auto-monitoring.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  schedule: "0 1 * * 1"  # production
+  # schedule: "*/1 * * * *"  # for testing
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          name:  {{ template "auto-monitoring.fullname" . }}
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          containers:
+            - name:  {{ template "auto-monitoring.fullname" . }}
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              image: "{{ .Values.image.repository }}:{{ .Values.IMAGE_TAG }}"
+
+              env:
+                - name: MLFLOW_S3_ENDPOINT_URL
+                  value: https://s3.heu.cz/
+                - name: DOCKER_HOST
+                  value: unix://var/run/docker/docker.sock
+                - name: WEBHOOK_URL
+                  value: "https://hooks.slack.com/services/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"
+
+              envFrom:
+                - configMapRef:
+                    name: {{ template "auto-monitoring.fullname" . }}-configmap
+
+              resources:
+                limits:
+                  cpu: 8
+                  memory: 16Gi
+                requests:
+                  cpu: 8
+                  memory: 16Gi
+
+              volumeMounts:
+                - mountPath: {{ .Values.volumes.dataPath }}
+                  name: data-volume
+
+          volumes:
+            - name: data-volume
+              emptyDir: {}

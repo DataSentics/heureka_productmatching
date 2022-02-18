@@ -1,0 +1,7 @@
+test:
+  stage: test
+  services:
+    - registry.gitlab.heu.cz/docker-tools/dind:v1
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker-compose -f docker-compose.yaml -f docker-compose.image.yaml -f docker-compose.kafka_local.yaml up --abort-on-container-exit tests

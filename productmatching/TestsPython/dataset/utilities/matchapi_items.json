@@ -1,0 +1,106 @@
+{
+    "product": {
+        "name": "apple iphone 6 32GB",
+        "prices": [
+            100,
+            200
+        ],
+        "shops": [
+            1
+        ],
+        "category_id": "666",
+        "attributes": {
+            "color": "black"
+        },
+        "eans": [
+            1
+        ]
+    },
+    "product_ean_required": {
+        "name": "apple iphone 6 32GB",
+        "ean_required": 1,
+        "prices": [
+            100,
+            200
+        ],
+        "shops": [
+            1
+        ],
+        "category_id": "666",
+        "eans": [
+            1
+        ]
+    },
+    "product_unique_names": {
+        "name": "apple iphone 6 32GB",
+        "unique_names": 1,
+        "prices": [
+            100,
+            200
+        ],
+        "shops": [
+            1
+        ],
+        "category_id": "666",
+        "eans": [
+            1
+        ]
+    },
+    "product_different": {
+        "name": "something completely different which should not be paired, 15GB",
+        "prices": [
+            0
+        ],
+        "shops": [
+            0
+        ],
+        "category_id": "66666",
+        "attributes": {
+            "color": "white"
+        },
+        "eans": [
+            0
+        ]
+    },
+    "offer_same": {
+        "name": "apple iphone 6 32GB",
+        "price": 100,
+        "shop": 1,
+        "attributes": {
+            "color": "black"
+        },
+        "ean": 1
+    },
+    "offer_ean": {
+        "name": "apple iphone 6 32GB X",
+        "price": 100,
+        "shop": 1,
+        "attributes": {
+            "color": "black"
+        },
+        "ean": 1
+    },
+    "offer_different": {
+        "name": "something completely different which will not be paired 23GB",
+        "price": 1,
+        "shop": 0,
+        "attributes": {
+            "color": "white"
+        },
+        "ean": 0
+    },
+    "offer_unit_mismatch": {
+        "name": "apple iphone 6 16GB",
+        "price": 100,
+        "shop": 1,
+        "attributes": {},
+        "ean": 1
+    },
+    "offer_similar": {
+        "name": "isense 6 32GB",
+        "price": 1000,
+        "shop": 0,
+        "attributes": {},
+        "ean": 0
+    }
+}

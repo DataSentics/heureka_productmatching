@@ -1,0 +1,25 @@
+# Data
+.git
+data/*
+!data/.gitkeep
+secrets.env
+
+# Python
+venv
+__pycache__
+
+# Tools
+mlruns/*
+!mlruns/.gitkeep
+tensorboard/*
+!tensorboard/.gitkeep
+.ipynb_checkpoints
+
+# IDE
+.history
+.vscode
+.code
+.idea
+
+# System
+.DS_Store

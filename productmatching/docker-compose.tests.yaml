@@ -1,0 +1,79 @@
+version: "3.7"
+# general tests setup. Some env variables (e.g. credentials) are passed separatly depending on environment (Gitlab vs. locally)
+services:
+  pythontest:
+    build:
+      context: .
+    image: productmatching:dev
+    command: python3 -m pytest -vv -rP -rx -o log_cli=true --log-cli-level=DEBUG --capture=no --ignore-glob='*_workflow.py' --ignore-glob='*_candy.py' --ignore-glob='*_matchapi_deploy.py' --ignore-glob='*_monitoring.py'
+    environment:
+      PYTHONPATH: /app
+    volumes:
+      - "./:/app"
+
+  monitoring_tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.auto_monitoring
+    command: python3 -m pytest -vv -rP -rx -o log_cli=true --log-cli-level=DEBUG --capture=no TestsPython/utilities/test_monitoring.py
+    environment:
+      PYTHONPATH: /app
+    volumes:
+      - "./:/app"
+
+  all_init:
+    image: $IMAGE_INIT_REPOSITORY:$IMAGE_INIT_TAG
+    environment:
+      - S3_ACCESS_KEY=$AWS_ACCESS_KEY_ID
+      - S3_SECRET_KEY=$AWS_SECRET_ACCESS_KEY
+      - S3_HOST=s3.heu.cz
+      - S3_HOST_BUCKET=s3.heu.cz
+      - DATA_PATH=${DATA_PATH:-/app/data/}
+      - S3_FILES=$S3_FILES
+    volumes:
+      - ./:/app
+
+  # contains OC S3 credentials 
+  all_init_oc:
+    image: $IMAGE_INIT_REPOSITORY:$IMAGE_INIT_TAG
+    environment:
+      - S3_ACCESS_KEY=$OC_S3_ACCESS_KEY_ID
+      - S3_SECRET_KEY=$OC_S3_SECRET_ACCESS_KEY
+      - S3_HOST=s3.heu.cz
+      - S3_HOST_BUCKET=s3.heu.cz
+      - DATA_PATH=${DATA_PATH:-/app/data/}
+      - S3_FILES=$S3_FILES
+    volumes:
+      - ./:/app
+
+  collector:
+    image: registry.gitlab.heu.cz/catalogue/matching-ng/collector:latest
+    volumes:
+      - ./TestsPython/dataset/workflow_data:/TestsPython/dataset/workflow_data
+      - ./Workflow/charts/:/Workflow/charts/
+    environment:  
+      CATEGORIES: "1962"
+    command: bash -c "/app/main --status=active --category=$$CATEGORIES --api-offer-fields=id,product_id,name,offer_name,match_name,price,parsed_attributes,attributes,ean,shop_id,url,description --api-product-fields=id,category_id,name,slug,status,attributes,eans,shops,prices,producers,category.slug,description --data-directory=/TestsPython/dataset/workflow_data --max-products-per-category=25"
+
+
+  workflow_tests:
+    image: $IMAGE_REPOSITORY/workflow_tests:$IMAGE_TAG
+    command: python3 -m pytest -vv TestsPython/utilities/test_workflow.py
+    environment:
+      PYTHONPATH: /app:/app/resources/candy/src
+    volumes:
+      - "./:/app"
+
+  matchapi_tests:
+    image: $IMAGE_REPOSITORY/workflow_tests:$IMAGE_TAG
+    command: python3 -m pytest -vv -rP -rx -o log_cli=true --log-cli-level=INFO TestsPython/utilities/test_matchapi_deploy.py
+    environment:
+      PYTHONPATH: /app:/app/resources/candy/src
+      CONFIG__DEBUG: "false"
+      MLFLOW_S3_ENDPOINT_URL: https://s3.heu.cz/
+      MLFLOW_TRACKING_URI: http://catalogue-mlflow.stage.k8s.heu.cz/
+      MLFLOW_TRACKING_INSECURE_TLS: "true"
+      MATCHAPI_ID: 1 # determine model which will be loaded, see mapping json on S3.
+    volumes:
+      - "./:/app"
+

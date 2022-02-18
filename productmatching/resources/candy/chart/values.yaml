@@ -1,0 +1,118 @@
+replicaCount: 1
+
+ingress:
+  enabled: false
+
+image:
+  repository: docker.srv.czech/gitlab_docker/candy
+  tag: latest
+  pullPolicy: IfNotPresent
+
+jobs:
+  enabled: false
+
+service:
+  type: ClusterIP
+  port: 5000
+
+resources:
+  limits:
+    cpu: 5
+    memory: 10Gi
+  requests:
+    cpu: 5
+    memory: 10Gi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+probes:
+  liveness:
+    periodSeconds: 60
+    timeoutSeconds: 60
+    initialDelaySeconds: 60
+    successThreshold: 1
+    failureThreshold: 5
+  readiness:
+    periodSeconds: 60
+    timeoutSeconds: 60
+    initialDelaySeconds: 60
+    successThreshold: 1
+    failureThreshold: 5
+
+CANDY_LANGUAGE: cz
+CANDY_ENVIRONMENT: production
+
+CANDY_SENTRY_DSN: ""
+
+CANDY_KAFKA_BOOTSTRAP_SERVERS: ""
+CANDY_KAFKA_CONSUMER_GROUP_ID: ""
+CANDY_KAFKA_SASL_USERNAME: ""
+CANDY_KAFKA_SASL_PASSWORD: ""
+CANDY_KAFKA_RETRIES: 5
+CANDY_KAFKA_MAX_REQUESTS_PER_CONN: 1
+CANDY_KAFKA_CONSUME_MAX_MESSAGES: 50000
+CANDY_KAFKA_CONSUME_TIMEOUT: 15
+
+CANDY_ITEMS_RANGE_SIZE: 15
+CANDY_CANDIDATES_LIMIT: 10
+CANDY_MAX_WEIGHT: 10
+CANDY_NO_ITEMS_SLEEP: 5
+CANDY_KAFKA_CHECK_TOPIC_EXISTENCE: 1
+CANDY_EMBEDDING_QUEUE_CHECK_SLEEP: 15
+CANDY_EMBEDDING_READY_TIMEOUT: 120
+CANDY_DISTANCE_THRESHOLD: 3
+CANDY_SUPPORTED_CATEGORIES: "1962,1963,962,961,966,960,1041"
+CANDY_USE_IMAGESIMILARITY: 0
+CANDY_PRIORITIZE_STATUS: "false"
+CANDY_REMOVE_LONGTAIL: "false"
+
+CANDY_MAX_RETRY: 5
+CANDY_MAX_MINUTES: 180
+
+CANDY_CANDIDATES_PROVIDERS: ""
+CANDY_CATALOGUE: ""
+CANDY_FAISS: ""
+CANDY_ELASTIC_ADDRESS: ""
+CANDY_ELASTIC_CANDIDATES_INDEX: ""
+
+CANDY_REDIS_OFFERS_ADDRESS: ""
+CANDY_REDIS_OFFERS_PASSWORD: ""
+CANDY_REDIS_OFFERS_DB: 0
+
+CANDY_REDIS_MONOLITH_MATCHING_ADDRESS: ""
+CANDY_REDIS_MONOLITH_MATCHING_PASSWORD: ""
+CANDY_REDIS_MONOLITH_MATCHING_DB: 0
+
+CANDY_CANDIDATE_REQUIRED_FIELDS: ""
+CANDY_ITEM_REQUIRED_FIELDS: ""
+
+CANDY_AWS_ACCESS_KEY_ID: ""
+CANDY_AWS_SECRET_ACCESS_KEY: ""
+
+CANDY_WRITE_RESULTS_TO_MONOLITH: 1
+CANDY_TOPIC_REDIS: "uQueue-offerMatching-ng-offers"
+CANDY_TOPIC_KAFKA_CANDIDATE_EMBEDDING: "matching-ng-candidate-embedding-cz"
+CANDY_TOPIC_KAFKA_ITEM_MATCHED: "matching-ng-item-matched-cz"
+CANDY_TOPIC_KAFKA_ITEM_NOT_MATCHED: "'matching-ng-item-new-candidate-cz'"
+CANDY_TOPIC_KAFKA_ITEM_UNKNOWN: "matching-ng-unknown-match-cz"
+CANDY_TOPIC_KAFKA_ITEM_NO_CANDIDATES_FOUND: "matching-ng-no-candidates-cz"
+
+CANDY_EXTRACT_FILES: "false"
+
+CANDY_MATCHAPI_BASE: ""
+CANDY_MATCHAPI_CONFIG_FILE: ""
+CANDY_MATCHAPI_DEFAULT_UNKNOWN: "true"
+
+FEATURE_OC: "false"
+vault:
+  enabled: "true"
+  addr: "http://vault.stage.k8s.heu.cz/"
+  token: ""
+  oc_mount_point: ""
+  ml_mount_point: "matching"
+  elastic_path: "elastic"
+  s3_path: ""

@@ -1,0 +1,63 @@
+apiVersion:  batch/v1
+kind: Job
+metadata:
+  name: {{ template "matchapi-multi.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  template:
+    metadata:
+      name:  {{ template "matchapi-multi.fullname" . }}
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      initContainers:
+        - name: init-data-volume
+          image: "{{ .Values.image.initRepository }}:{{ .Values.IMAGE_TAG }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+            - mountPath: {{ .Values.volumes.dataPath }}
+              name: data-volume
+          envFrom:
+            - configMapRef:
+                name: {{ template "matchapi-multi.fullname" . }}-configmap-init
+            - secretRef:
+                name: {{ template "matchapi-multi.fullname" . }}-secret-init
+      containers:
+        - name:  {{ template "matchapi-multi.fullname" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.image.repository }}:{{ .Values.IMAGE_TAG }}"
+
+          env:
+            - name: DOCKER_HOST
+              value: unix://var/run/docker/docker.sock
+
+          envFrom:
+            - configMapRef:
+                name: {{ template "matchapi-multi.fullname" . }}-configmap
+
+          volumeMounts:
+            - mountPath: {{ .Values.volumes.dataPath }}
+              name: data-volume
+
+          readinessProbe:
+            initialDelaySeconds: 30
+            failureThreshold: 3
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - stat $(find /tmp -name stamp -mmin -1)
+
+          livenessProbe:
+            periodSeconds: 30
+            initialDelaySeconds: 30
+            failureThreshold: 10
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - stat $(find /tmp -name stamp -mmin -1)
+
+      volumes:
+        - name: data-volume
+          emptyDir: {}

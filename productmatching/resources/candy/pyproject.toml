@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "candy"
+version = "0.1.0"
+description = ""
+authors = ["Team Purple <purpledevs@heureka.cz>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+buttstrap = {version = "^3",extras = ["log", "metrics", "remote_services", "redis", "jsonrpc", "kafka", "elastic"]}
+sentry_sdk = "0.7.14"
+numpy = "1.18.3"
+url-generator = "1.0.0"
+aio-py-rq = "2.0.1"
+tenacity = "6.2.0"
+memprof = "0.3.6"
+guppy3 = "^3.0.10"
+redis = "3.5.3"
+boto3 = "1.14.60"
+elasticsearch = "7.10.1"
+occommon = "^1.2.0"
+matching-common = "0.4.6"
+
+[tool.poetry.dev-dependencies]
+pytest = "^4.4"
+pytest-asyncio = "^0.10.0"
+
+[[tool.poetry.source]]
+name = "heureka-prod"
+url = "https://pypi.heu.cz/root/production/+simple/"
+default = true
+
+[[tool.poetry.source]]
+name = "heureka-dev"
+url = "https://pypi.heu.cz/root/dev/+simple/"
+
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

@@ -1,0 +1,79 @@
+# Default values for chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+
+namespace: one-catalogue
+
+hpa:
+  maxReplicas: 5
+  minReplicas: 1
+  targetCPUUtilizationPercentage: 90
+
+resources:
+  limits:
+    cpu: 4
+    memory: 5Gi
+  requests:
+    cpu: 1
+    memory: 5Gi
+
+volumes:
+  dataPath: /app/data/
+
+service:
+  type: ClusterIP
+  port: 80
+
+metrics:
+  type: ClusterIP
+  port: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+probes:
+  liveness:
+    periodSeconds: 30
+    timeoutSeconds: 15
+    initialDelaySeconds: 120
+    successThreshold: 1
+    failureThreshold: 3
+
+servicemonitor:
+  prometheus_tag:
+    enabled: false
+  release_tag:
+    enabled: true
+
+matchapi_id: ""
+
+s3:
+  enabled: true
+  host: s3.heu.cz
+  hostBucket: s3.heu.cz
+  accessKey: ""
+  secretKey: ""
+  files: >
+    s3://matchapi-data-cz/external_models/sbert_model.tar.gz
+
+sentry:
+  dsn: "https://b72f1ad5759a4925991d3df11c4ec0fe@sentry.heu.cz/138"
+
+CONFIG__TRANSFORMER_PATH: "/app/data/sbert_model"
+
+mlflow:
+  mlflow_s3_endpoint_url: "https://s3.heu.cz/"
+  mlflow_s3_access_key: ""
+  mlflow_s3_secret_key: ""
+  mlflow_tracking_uri: "http://catalogue-mlflow.stage.k8s.heu.cz/"
+  mlflow_tracking_insecure_tls: "true"
+
+feature_flags:
+  one_catalogue: true
+
+LANGUAGE: oc
+ENVIRONMENT: prod

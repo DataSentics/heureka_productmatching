@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Config
+clusters:
+- name: default-cluster
+  cluster:
+    certificate-authority-data: fill_me
+    server: https://api.k8s.heu.cz:6443
+contexts:
+- name: production
+  context:
+    cluster: default-cluster
+    namespace: default
+    user: default-user
+current-context: production
+users:
+- name: default-user
+  user:
+    token: fill_me

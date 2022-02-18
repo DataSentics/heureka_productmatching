@@ -1,0 +1,23 @@
+version: "3.7"
+services:
+  component:
+    image: $IMAGE_REPOSITORY:$IMAGE_TAG
+
+  pythontest:
+    image: $IMAGE_REPOSITORY:$IMAGE_TAG
+
+  # additional tests definition for runs in gitlab, e.g. credentials via CICD values
+  workflow_tests:
+    image: $IMAGE_REPOSITORY/workflow_tests:$IMAGE_TAG
+    environment:
+      AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+      VAULT_TOKEN: $VAULT_TOKEN_STAGE
+      CATEGORIES: ${COLLECTOR_CATEGORIES:-1962}
+
+  # additional tests definition for runs in gitlab, e.g. credentials via CICD values
+  matchapi_tests:
+    image: $IMAGE_REPOSITORY/workflow_tests:$IMAGE_TAG
+    environment:
+      AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY

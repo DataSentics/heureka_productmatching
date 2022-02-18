@@ -1,0 +1,59 @@
+image: registry.gitlab.heu.cz/docker-tools/pipelines:v4
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  DEPLOY_BASE_NAME: productmatching
+  IMAGE_REPOSITORY: "registry.gitlab.heu.cz/catalogue/matching-ng/productmatching"
+  IMAGE_INIT_REPOSITORY: "registry.gitlab.heu.cz/catalogue/matching-ng/productmatching/init"
+  IMAGE_TAG: "$CI_COMMIT_REF_SLUG"
+  IMAGE_TAG_BEFORE: "$CI_COMMIT_REF_SLUG"
+  IMAGE_INIT_TAG: "$CI_COMMIT_REF_SLUG"
+  CI_NAMESPACE: matching-ng
+  CI_NAMESPACE_JOBS: catalogue-mlflow
+  STAGING_BASE_DOMAIN: stage.k8s.heu.cz
+  PRODUCTION_BASE_DOMAIN: k8s.heu.cz
+  MATCHAPI_DEPLOY_JOB: "none"
+  UNINSTALL: "true"
+  INSTALL: "true"
+  # controlling the use of attribute check in both workflow evaluation and matchapis
+  USE_ATTRIBUTE_CHECK: "0"
+  WORKFLOW_DEPLOY_TYPE: "none"
+  DOCKER_API_VERSION: "1.38"
+  # all following fields might contain multiple values separated by "@@", "__" serves as an empty field
+  COLLECTOR_CATEGORIES: "1962,1963"
+  CACHE_ADDRESS: ""
+  PRECEDING_CACHE_ADDRESS: ""
+  # S3 addresses of `overall_per_category_results.csv` files to get estimate of probability of model improvement on identical dataset
+  PER_CATEGORY_RESULTS_TO_COMPARE_ADDRESS: ""
+  VALIDATION_EXCEL_TO_COMPARE_ADDRESS: ""
+  # WORKFLOW_IDS might be of arbitrary value/type
+  # when running mct_transfer workflow, workflow_id will be used as name of the model, use e.g. "electro1"
+  WORKFLOW_IDS: "1"
+  # all following fields: when using single value without separators, it will be used for all workflows
+  STATIC_DATASET_VERSIONS: "-1"
+  # which workflow should be started: main_workflow/clustering/mct_transfer. Default is main_workflow
+  WORKFLOW_TO_RUN: "main_workflow"
+
+
+stages:
+  - workflow
+  - build
+  - tests
+  - uninstall
+  - deploy
+  - multi-deploy
+  - multi-deploy-oc
+  - auto-monitoring
+  - build-latest
+  - cleanup
+
+include:
+  - local: .gitlab/ci/build.yaml
+  - local: .gitlab/ci/tests.yaml
+  - local: .gitlab/ci/deploy.yaml
+  - local: .gitlab/ci/multi-deploy.yaml
+  - local: .gitlab/ci/multi-deploy-oc.yaml
+  - local: .gitlab/ci/auto-monitoring.yaml
+  - local: .gitlab/ci/uninstall.yaml
+  - local: .gitlab/ci/workflow.yaml
+  - local: .gitlab/ci/deployment-oc.yaml

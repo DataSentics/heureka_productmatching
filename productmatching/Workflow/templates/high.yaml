@@ -1,0 +1,70 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{replaced with MLflow Project name}"
+  namespace: catalogue-mlflow
+spec:
+  ttlSecondsAfterFinished: 100
+  successfulJobsHistoryLimit: 0
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: "{replaced with MLflow Project name}"
+        imagePullPolicy: Always
+        image: "{replaced with URI of Docker image created during Project execution}"
+        command: ["{replaced with MLflow Project entry point command}"]
+        env:
+        - name: MLFLOW_S3_ENDPOINT_URL
+          value: https://s3.heu.cz/
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: WEBHOOK_URL
+          value: "https://hooks.slack.com/services/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"
+        - name: USER_MENTIONS
+          value: "@username"
+        - name: N_CORES
+          value: "30"
+        - name: HOST_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: GOOGLE_SERVICE_ACCOUNT
+          value: "@GOOGLE_SERVICE_ACCOUNT"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: "@GOOGLE_APPLICATION_CREDENTIALS"
+        - name: VAULT_TOKEN
+          value: "@VAULT_TOKEN"
+        - name: DEXTER_DB_PASSWORD
+          value: "@DEXTER_DB_PASSWORD"
+        - name: REF
+          value: "@REF"
+        - name: TRIGGER_TOKEN
+          value: "@TRIGGER_TOKEN"
+        - name: PRODUCT_STATUSES
+          value: "@PRODUCT_STATUSES"
+        - name: USE_GCP_ELASTIC
+          value: "@USE_GCP_ELASTIC"
+        - name: KUBE_ELASTIC_ADDRESS
+          value: "@KUBE_ELASTIC_ADDRESS"
+        - name: USE_ATTRIBUTE_CHECK
+          value: "@USE_ATTRIBUTE_CHECK"
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "@KAFKA_BOOTSTRAP_SERVERS"
+        envFrom:
+          - secretRef:
+              name: workflow-storage
+        resources:
+          limits:
+            cpu: 20
+            memory: 40Gi
+          requests:
+            cpu: 10
+            memory: 40Gi
+        volumeMounts:
+          - name: data
+            mountPath: /data
+      volumes:
+        - name: data
+          emptyDir: {}

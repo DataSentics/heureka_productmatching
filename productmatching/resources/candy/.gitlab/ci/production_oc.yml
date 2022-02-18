@@ -1,0 +1,32 @@
+variables:
+  KUBE_NAMESPACE_PROD: "one-catalogue"
+  GCR_PROD_IMAGE: eu.gcr.io/one-catalogue/candy
+
+production_oc:
+  stage: deploy
+  image: registry.gitlab.heu.cz/one-catalogue/oc-pipeline-image:v4
+  variables:
+    KUBE_NAMESPACE_PROD: one-catalogue
+    OC_DEPLOYER_PRIVATE_KEY: $OC_DEPLOYER_PROD_PRIVATE_KEY
+  services:
+    - registry.gitlab.heu.cz/docker-tools/dind:v1
+  before_script:
+    - oc_gitlab_auth
+    - oc_gcp_auth
+  script:
+    - docker pull "$IMAGE:$TAG"
+    - docker tag "$IMAGE:$TAG" "$GCR_PROD_IMAGE:$TAG"
+    - docker push "$GCR_PROD_IMAGE:$TAG"
+    - helm3 upgrade
+      --namespace="$KUBE_NAMESPACE_PROD"
+      --install
+      --wait
+      --set image.repository="$GCR_PROD_IMAGE"
+      --set image.tag="$TAG"
+      --set vault.token="$OC_VAULT_TOKEN_PROD"
+      --values chart/values_oc_prod.yaml
+      "$DEPLOY_NAME" chart/
+    - 'curl -d "{\"text\": \"$GITLAB_USER_NAME deployed Candy into $KUBE_NAMESPACE_PROD\"}" -H "Content-Type: application/json" -X POST https://hooks.slack.com/services/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'
+  environment:
+    name: production-oc
+  when: manual

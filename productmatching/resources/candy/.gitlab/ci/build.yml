@@ -1,0 +1,23 @@
+build:
+  stage: build
+  services:
+    - registry.gitlab.heu.cz/docker-tools/dind:v1
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker pull "$IMAGE:latest" || true
+    - docker pull "$IMAGE:$TAG_BEFORE" || true
+    - docker build --cache-from "$IMAGE:latest" --cache-from "$IMAGE:$TAG_BEFORE" -t "$IMAGE:$TAG" .
+    - docker push "$IMAGE:$TAG"
+
+build-latest:
+  stage: build
+  services:
+    - registry.gitlab.heu.cz/docker-tools/dind:v1
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker pull "$IMAGE:$TAG_BEFORE" || true
+    - docker build --cache-from "$IMAGE:$TAG_BEFORE" -t "$IMAGE:latest" .
+    - docker push "$IMAGE:latest"
+  only:
+    refs:
+      - master

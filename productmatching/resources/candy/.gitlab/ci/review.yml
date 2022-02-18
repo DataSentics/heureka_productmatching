@@ -1,0 +1,76 @@
+review_cz:
+  stage: deploy
+  before_script:
+    - rm /root/.kube/config; cp /secrets/secrets/.kube-config /root/.kube/config
+    - kubectl config set-credentials stage --token="$KUBE_TOKEN_STAGE"
+  script:
+    - echo "$HELM_VALUES_REVIEW_CZ" > /tmp/values.yaml
+    - helm3 dependency build chart/
+    - helm3 upgrade
+        --namespace="$CI_NAMESPACE"
+        --install
+        --wait
+        --set image.repository="$IMAGE"
+        --set image.tag="$TAG"
+        --set vault.token="$VAULT_TOKEN_STAGE"
+        --values /tmp/values.yaml
+        --kube-context stage
+        "$DEPLOY_NAME-$CI_COMMIT_REF_SLUG-cz" chart/
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    on_stop: stop_review
+  only:
+    refs:
+      - branches
+  except:
+    - master
+  when: manual
+
+review_sk:
+  stage: deploy
+  before_script:
+    - rm /root/.kube/config; cp /secrets/secrets/.kube-config /root/.kube/config
+    - kubectl config set-credentials stage --token="$KUBE_TOKEN_STAGE"
+  script:
+    - echo "$HELM_VALUES_REVIEW_SK" > /tmp/values.yaml
+    - helm3 dependency build chart/
+    - helm3 upgrade
+        --namespace="$CI_NAMESPACE"
+        --install
+        --wait
+        --set image.repository="$IMAGE"
+        --set image.tag="$TAG"
+        --set vault.token="$VAULT_TOKEN_STAGE"
+        --values /tmp/values.yaml
+        --kube-context stage
+        "$DEPLOY_NAME-$CI_COMMIT_REF_SLUG-sk" chart/
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    on_stop: stop_review
+  only:
+    refs:
+      - branches
+  except:
+    - master
+  when: manual
+
+stop_review:
+  stage: cleanup
+  variables:
+    GIT_STRATEGY: none
+  before_script:
+    - rm /root/.kube/config; cp /secrets/secrets/.kube-config /root/.kube/config
+    - kubectl config set-credentials stage --token="$KUBE_TOKEN_STAGE"
+  script:
+    - helm3 uninstall "$DEPLOY_NAME-$CI_COMMIT_REF_SLUG-cz" --kube-context stage --namespace="$CI_NAMESPACE" 2> /dev/null || exit 0
+    - helm3 uninstall "$DEPLOY_NAME-$CI_COMMIT_REF_SLUG-sk" --kube-context stage --namespace="$CI_NAMESPACE" 2> /dev/null || exit 0
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    action: stop
+  when: manual
+  allow_failure: true
+  only:
+    refs:
+      - branches
+  except:
+    - master

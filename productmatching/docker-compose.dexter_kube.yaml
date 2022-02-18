@@ -1,0 +1,10 @@
+version: "3"
+services:
+  auto_monitoring:
+    environment:
+      # host.docker.internal works on windows and mac. Linux users should use localhost:3377
+      # assumes portforward to local port 3377, otherwise change DB_PORT
+      DB_HOST: host.docker.internal
+      DB_PORT: 3377
+    # add host network so localhost is visible in the container
+    network_mode: host

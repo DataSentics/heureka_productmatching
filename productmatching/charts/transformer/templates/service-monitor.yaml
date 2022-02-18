@@ -1,0 +1,29 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "transformer.fullname" . }}
+  labels:
+    app: {{ template "transformer.name" . }}
+    {{ if eq .Values.feature_flags.one_catalogue true }}
+    release: prometheus-operator
+    {{ else }}
+    prometheus: purple-prometheus
+    {{ end }}
+spec:
+  namespaceSelector:
+    matchNames:
+      {{ if eq .Values.feature_flags.one_catalogue true }}
+      - {{ .Release.Namespace }}
+      {{ else }}
+      - matching-ng
+      {{ end }}
+  selector:
+    matchLabels:
+      app: {{ template "transformer.name" . }}
+      {{ if eq .Values.feature_flags.one_catalogue true }}
+      release: {{ .Release.Name }}
+      {{ end }}
+  endpoints:
+    - port: http
+      interval: 10s
+      path: /metrics

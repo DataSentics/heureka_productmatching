@@ -1,0 +1,3 @@
+[submodule "resources/url-generator-routes"]
+	path = resources/url-generator-routes
+	url = git@gitlab.heu.cz:resources/url-generator-routes.git

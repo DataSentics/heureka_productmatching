@@ -1,0 +1,64 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: productmatching-single-job-xgboost-train
+  namespace: catalogue-mlflow
+spec:
+  ttlSecondsAfterFinished: 100
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: productmatching-single-job-xgboost-train
+        imagePullPolicy: Always
+        image: registry.gitlab.heu.cz/catalogue/matching-ng/productmatching:purple-1811
+        command: ["python3"]
+        args: [
+          "/app/SourcesPython/xgboostmatching/components/train/main.py",
+          "--data-directory",
+          "/data",
+          "--iterations",
+          "100000",
+          "--input-dataset",
+          "s3://mlflow/170/1f9f705b8c36450d807eca57117a62e6/artifacts/dataset.tar.gz",
+          "--parameters",
+          "booster=gbtree,objective=binary:logistic,learning_rate=0.5,max_depth=4,subsample=1"
+        ]
+        env:
+        - name: LOGLEVEL
+          value: DEBUG
+        - name: MLFLOW_EXPERIMENT_NAME
+          value: "productmatching-single-job-xgboost-train"
+        - name: MLFLOW_TRACKING_URI
+          value: http://catalogue-mlflow.stage.k8s.heu.cz
+        - name: MLFLOW_S3_ENDPOINT_URL
+          value: https://s3.heu.cz/
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: WEBHOOK_URL
+          value: "https://hooks.slack.com/services/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"
+        - name: USER_MENTIONS
+          value: "@peter.jung"
+        - name: N_CORES
+          value: "20"
+        - name: HOST_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        envFrom:
+          - secretRef:
+              name: workflow-storage
+        resources:
+          limits:
+            cpu: 20
+            memory: 20Gi
+          requests:
+            cpu: 20
+            memory: 20Gi
+        volumeMounts:
+          - name: data
+            mountPath: /data
+      volumes:
+        - name: data
+          emptyDir: {}

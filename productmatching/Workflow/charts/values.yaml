@@ -1,0 +1,38 @@
+# limit downloaded products per category
+COLLECTOR_MAX_PRODUCTS: "100"
+PRODUCT_STATUSES: "11"
+EVALUATION_SEARCH_THRESHOLD: "1"
+EVALUATION_SEARCH_MAX_CANDIDATES: "10"
+MAX_XGB_SAMPLE_OFFERS_PER_PRODUCT: "10"
+# xgb features to be updated or additionally computed in  json format similar to: 
+# "{\"get_namesimilarity_result\":[0],\"match_attributes\":[0,1]}"
+# where the keys corresponds to keys of xgboostmatching.models.features.features_conf.FEATURES_CONFIG
+# and the lists' values correspond to indexes of corresponding "features" list in FEATURES_CONFIG
+# the sample input will lead to recalculation of all namesimilarity features, `i_attributes` and `r_attributesmatched`
+EXTRA_XGB_FEATURES: ""
+TRANSFORMER_API_URL: "http://productmatching.transformer.1.k8s.heu.cz"
+USE_TRANSFORMER_API: "0"
+GOOGLE_SERVICE_ACCOUNT: ""
+GOOGLE_APPLICATION_CREDENTIALS: ""
+VAULT_TOKEN: ""
+DEXTER_DB_PASSWORD: ""
+KAFKA_BOOTSTRAP_SERVERS: ""
+# register model after training
+# it is rewritten during retrain run if model metrics are above specified thresholds
+REGISTER_MODEL: "0"
+# changed to empty string if not retrain run sice no redeploy is done in that case
+REINSTALL_MATCHAPIS_ENVS: "stage,production"
+USE_GCP_ELASTIC: "false"
+# used only if USE_GCP_ELASTIC == "true"
+KUBE_ELASTIC_ADDRESS: "http://matching-search-es-data.stage.k8s.heu.cz:80"
+# static dataset conf
+STATIC_DATASETS_INFO_FILE: "category_dataset_info.json"
+STATIC_DATASETS_BUCKET: "s3://ml-static-datasets"
+USE_STATIC_DATASET: "0"
+CANDIDATES_RETRIEVAL_SEARCH_THRESHOLD: "1"
+CANDIDATES_RETRIEVAL_SEARCH_MAX_CANDIDATES: "10"
+CANDIDATES_RETRIEVAL_SOURCES: "elastic"
+XGB_DATA_CANDIDATES_SOURCES: "elastic"
+EVALUATION_CANDIDATES_SOURCES: "elastic"
+MATCHED_CONFIDENCE_THRESHOLD: "0.75"
+PRECISION_CONFIDENCE_THRESHOLD: "0.95"

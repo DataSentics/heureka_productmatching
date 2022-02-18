@@ -1,0 +1,15 @@
+FROM python:3.8-slim-buster
+
+# Many things in one step to make sure we leave the layer as small as possible
+RUN apt-get update \
+    && apt-get install -y curl ca-certificates git gcc g++ musl-dev make \
+    && curl --silent --show-error https://ca.hdc2.cz/ca.crt -o /usr/local/share/ca-certificates/heureka_ca.crt \
+    && update-ca-certificates
+
+RUN pip3 install --no-cache-dir requests==2.25.1
+
+WORKDIR /app
+
+COPY SourcesPython/matchapi_multi ./matchapi_multi
+
+CMD ["python3", "/app/matchapi_multi/main.py"]

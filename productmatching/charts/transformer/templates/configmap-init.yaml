@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "transformer.fullname" . }}-configmap-init
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "transformer.name" . }}
+    chart: {{ template "transformer.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  S3_HOST: {{ .Values.s3.host }}
+  S3_HOST_BUCKET: {{ .Values.s3.hostBucket }}
+  DATA_PATH: {{ .Values.volumes.dataPath }}
+  S3_FILES: {{ .Values.s3.files }}

@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+type: opaque
+data:
+  config: fill_me
+metadata:
+  name: ml-workflow-token
+  namespace: catalogue-mlflow

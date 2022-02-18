@@ -1,0 +1,9 @@
+version: "3"
+services:
+  candy:
+    environment:
+      CANDY_KAFKA_BOOTSTRAP_SERVERS: "catalogue-confluent-cp-kafka-0.catalogue-confluent-cp-kafka-headless.catalogue-kafka:9092"
+
+  extract:
+    environment:
+      CANDY_KAFKA_BOOTSTRAP_SERVERS: "catalogue-confluent-cp-kafka-0.catalogue-confluent-cp-kafka-headless.catalogue-kafka:9092"

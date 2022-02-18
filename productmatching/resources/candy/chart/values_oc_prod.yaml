@@ -1,0 +1,58 @@
+resources:
+  limits:
+    cpu: 1
+    memory: 1Gi
+  requests:
+    cpu: "500m"
+    memory: 500Mi
+
+CANDY_LANGUAGE: oc
+CANDY_ENVIRONMENT: production
+
+CANDY_SENTRY_DSN: "https://0374e1589c174d4fa1fead9b0cc19891@sentry.heu.cz/178"
+
+CANDY_KAFKA_CONSUMER_GROUP_ID: "candy"
+CANDY_KAFKA_RETRIES: 5
+CANDY_KAFKA_MAX_REQUESTS_PER_CONN: 1
+CANDY_KAFKA_CONSUME_MAX_MESSAGES: 50000
+CANDY_KAFKA_CONSUME_TIMEOUT: 15
+
+CANDY_SUPPORTED_CATEGORIES: "1"  # Placeholder
+CANDY_USE_IMAGESIMILARITY: 0  # Placeholder
+CANDY_PRIORITIZE_STATUS: "false"
+CANDY_REMOVE_LONGTAIL: "false"
+
+CANDY_MAX_RETRY: 5
+CANDY_MAX_MINUTES: 180
+
+CANDY_KAFKA_BOOTSTRAP_SERVERS: "david"
+CANDY_ELASTIC_ADDRESS: "https://e0c31b9d02414c118bb51360eed4767b.europe-west3.gcp.cloud.es.io:9243"
+CANDY_ELASTIC_CANDIDATES_INDEX: "search-products-prod-oc"
+CANDY_TOPIC_REDIS: "uQueue-ml-products"
+CANDY_TOPIC_KAFKA_CANDIDATE_EMBEDDING: "matching-candidate-embedding"
+CANDY_TOPIC_KAFKA_ITEM_MATCHED: "matching-item-matched"
+CANDY_TOPIC_KAFKA_ITEM_NOT_MATCHED: "matching-item-new-candidate"
+CANDY_TOPIC_KAFKA_ITEM_UNKNOWN: "matching-unknown_match"
+CANDY_TOPIC_KAFKA_ITEM_NO_CANDIDATES_FOUND: "matching-no-candidates"
+
+CANDY_CANDIDATES_PROVIDERS: "elastic"
+CANDY_CATALOGUE: "http://oc-catalogue.gke.hdc2.cz/"
+CANDY_FAISS: "http://indexer-api.gke.hdc2.cz/"
+
+CANDY_REDIS_OFFERS_ADDRESS: "redis://ml-redis.gke.hdc2.cz:6379"
+
+CANDY_MATCHAPI_BASE: "http://oc-matchapi.@@.gke.hdc2.cz/v1/"
+CANDY_MATCHAPI_CONFIG_FILE: "s3://matchapi-data-oc-prod/matchapi_id_categories_mapping.json"
+CANDY_MATCHAPI_DEFAULT_UNKNOWN: "false"
+
+FEATURE_OC: "true"
+vault:
+  enabled: "true"
+  addr: "http://vault.stage.k8s.heu.cz/"
+  token: ""
+  oc_mount_point: "one-catalogue/prod"
+  ml_mount_point: "matching"
+  kafka_path: "ingest/kafka"
+  redis_path: "catalogue/redis"
+  elastic_path: "elastic"
+  s3_path: "s3"

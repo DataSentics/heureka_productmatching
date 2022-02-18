@@ -1,0 +1,13 @@
+version: '3'
+services:
+  candy:
+    build: .
+
+  tests:
+    build: .
+
+  extract:
+    build: .
+
+  matching_rerun:
+    build: .

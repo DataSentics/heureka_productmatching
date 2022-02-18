@@ -1,0 +1,81 @@
+# Default values for chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+
+image:
+  repository: registry.gitlab.heu.cz/catalogue/matching-ng/productmatching
+  initRepository: registry.gitlab.heu.cz/catalogue/matching-ng/productmatching/init
+  tag: a8a036fe378e5fbf85cc541038206b4b36fe5d7a
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
+
+metrics:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  path: /
+  hosts:
+    - matchapi.local
+
+hpa:
+  maxReplicas: 8
+  minReplicas: 4
+  targetCPUUtilizationPercentage: 60
+
+resources:
+  limits:
+    cpu: 7
+    memory: 7Gi
+  requests:
+    cpu: 100m
+    memory: 3Gi
+
+volumes:
+  dataPath: /app/data/
+
+matchapi_id: ""
+
+s3:
+  host: s3.heu.cz
+  hostBucket: s3.heu.cz
+  accessKey: ""
+  secretKey: ""
+  files: >
+    s3://matchapi-data-cz/matchapi_id_categories_mapping.json
+
+CONFIG__DEBUG: "false"
+CONFIG__unit_conversions: "true"
+CONFIG__price_reject_a: 1000.0
+CONFIG__price_reject_b: 400.0
+CONFIG__price_reject_c: 2.5
+
+mlflow:
+  mlflow_s3_endpoint_url: "https://s3.heu.cz/"
+  mlflow_tracking_uri: "http://catalogue-mlflow.stage.k8s.heu.cz/"
+  mlflow_tracking_insecure_tls: "true"
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+probes:
+  liveness:
+    periodSeconds: 10
+    timeoutSeconds: 5
+    initialDelaySeconds: 300
+    successThreshold: 1
+    failureThreshold: 3
+
+LANGUAGE: cz
+ENVIRONMENT: stage
+
+feature_flags:
+  one_catalogue: false

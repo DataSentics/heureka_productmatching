@@ -1,0 +1,44 @@
+@baseUrl = http://localhost:8080
+# @baseUrl = http://productmatching.matchapi.k8s.heu.cz
+# @baseUrl = http://productmatching.matchapi.stage.k8s.heu.cz
+
+###
+
+# @name match
+# @note get match decision for offer vs. product
+POST {{baseUrl}}/v1/match HTTP/1.1
+content-type: application/json
+
+{
+	"product": {
+		"name": "Royal Canin Adult Medium 4 kg",
+		"prices": [1100, 1150, 1200, 1130],
+		"shops": [10, 20, 40, 40],
+		"attributes": {},
+		"eans": [10, 30],
+		"category_id": "1962"
+	},
+	"offer": {
+		"name": "Royal Canin Medium Adult 40 kg",
+		"price": 1150,
+		"shop": 4,
+		"attributes": {},
+		"ean": null
+	}
+}
+
+###
+
+# @name vectorize
+# @note (deprecated) get vector representation of names
+POST {{baseUrl}}/v1/vectorize HTTP/1.1
+content-type: application/json
+
+{
+	"sentences": [
+        {
+            "id": 0,
+            "value": "Oh My Gosh!"
+        }
+    ]
+}

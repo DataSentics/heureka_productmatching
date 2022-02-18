@@ -1,0 +1,26 @@
+{{- if .Values.jobs.enabled -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "candy.fullname" . }}-extract
+  namespace: {{ .Release.Namespace }}
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 60
+  template:
+    metadata:
+      name:  {{ template "candy.fullname" . }}-extract
+    spec:
+      restartPolicy: Never
+      containers:
+        - name:  {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          workingDir: /app/statistics
+          command: ["python3",  "run_test_matching.py"]
+          envFrom:
+            - configMapRef:
+                name: {{ template "candy.fullname" . }}
+            - secretRef:
+                name: {{ template "candy.fullname" . }}
+{{- end -}}

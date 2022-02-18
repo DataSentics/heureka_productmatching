@@ -1,0 +1,13 @@
+version: '3'
+services:
+  candy:
+    image: $IMAGE:$TAG
+
+  tests:
+    image: $IMAGE:$TAG
+
+  extract:
+    image: $IMAGE:$TAG
+
+  matching_rerun:
+    image: $IMAGE:$TAG

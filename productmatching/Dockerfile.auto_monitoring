@@ -1,0 +1,26 @@
+FROM python:3.8-slim-buster
+
+# Many things in one step to make sure we leave the layer as small as possible
+RUN apt-get update \
+    && apt-get install -y curl ca-certificates git gcc g++ musl-dev make \
+    && curl --silent --show-error https://ca.hdc2.cz/ca.crt -o /usr/local/share/ca-certificates/heureka_ca.crt \
+    && update-ca-certificates
+
+RUN pip3 install --no-cache-dir --index-url https://pypi.heu.cz/root/production 'poetry==1.0.0' \
+    && poetry config virtualenvs.create false \
+    && poetry --version
+
+ENV PYTHONPATH /app
+WORKDIR /app
+
+COPY SourcesPython/auto_monitoring/pyproject.toml ./
+COPY SourcesPython/auto_monitoring/poetry.lock ./
+RUN poetry install
+
+COPY SourcesPython/auto_monitoring ./auto_monitoring
+COPY SourcesPython/utilities ./utilities
+COPY SourcesPython/xgboostmatching ./xgboostmatching
+COPY resources/candy/resources/url-generator-routes ./resources/candy/resources/url-generator-routes
+COPY resources/candy/src/candy ./candy
+
+CMD ["python3", "/app/auto_monitoring/main.py"]

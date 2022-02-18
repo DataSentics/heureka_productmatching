@@ -1,0 +1,12 @@
+FROM python:3.8-slim-buster
+
+# install boto3 for upload to s3
+RUN pip3 install --no-cache-dir --index-url https://pypi.heu.cz/root/production 'boto3==1.12.49' 'numpy==1.19.2'
+
+ENV PYTHONPATH /app
+WORKDIR /app
+
+COPY SourcesPython/utilities/cache_upload.py ./
+COPY SourcesPython/utilities/s3_utils.py ./utilities/s3_utils.py
+COPY SourcesPython/utilities/args.py ./utilities/args.py
+COPY SourcesPython/utilities/component.py ./utilities/component.py

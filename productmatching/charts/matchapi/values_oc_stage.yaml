@@ -1,0 +1,83 @@
+# Default values for chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+
+namespace: one-catalogue-stage
+
+hpa:
+  maxReplicas: 4
+  minReplicas: 1
+  targetCPUUtilizationPercentage: 70
+
+resources:
+  limits:
+    cpu: 2
+    memory: 7Gi
+  requests:
+    cpu: 100m
+    memory: 3Gi
+
+volumes:
+  dataPath: /app/data/
+
+service:
+  type: ClusterIP
+  port: 80
+
+metrics:
+  type: ClusterIP
+  port: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+probes:
+  liveness:
+    periodSeconds: 10
+    timeoutSeconds: 5
+    initialDelaySeconds: 120
+    successThreshold: 1
+    failureThreshold: 3
+
+servicemonitor:
+  prometheus_tag:
+    enabled: false
+  release_tag:
+    enabled: true
+
+matchapi_id: ""
+
+s3:
+  enabled: true
+  host: s3.heu.cz
+  hostBucket: s3.heu.cz
+  accessKey: ""
+  secretKey: ""
+  files: >
+    s3://matchapi-data-oc-stage/matchapi_id_categories_mapping.json
+
+sentry:
+  dsn: "https://b72f1ad5759a4925991d3df11c4ec0fe@sentry.heu.cz/138"
+
+CONFIG__DEBUG: "false"
+CONFIG__unit_conversions: "true"
+CONFIG__price_reject_a: 1000.0
+CONFIG__price_reject_b: 400.0
+CONFIG__price_reject_c: 2.5
+
+mlflow:
+  mlflow_s3_endpoint_url: "https://s3.heu.cz/"
+  mlflow_s3_access_key: ""
+  mlflow_s3_secret_key: ""
+  mlflow_tracking_uri: "http://catalogue-mlflow.stage.k8s.heu.cz/"
+  mlflow_tracking_insecure_tls: "true"
+
+feature_flags:
+  one_catalogue: true
+
+LANGUAGE: oc
+ENVIRONMENT: stage

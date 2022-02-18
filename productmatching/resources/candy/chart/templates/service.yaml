@@ -1,0 +1,22 @@
+{{- if eq .Values.jobs.enabled false -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "candy.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "candy.name" . }}
+    chart: {{ template "candy.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: metrics
+  selector:
+    app: {{ template "candy.name" . }}
+    release: {{ .Release.Name }}
+{{- end -}}

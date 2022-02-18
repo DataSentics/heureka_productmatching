@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "matchapi.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "matchapi.name" . }}
+    chart: {{ template "matchapi.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  LANGUAGE: {{ .Values.LANGUAGE }}
+  ENVIRONMENT: {{ .Values.ENVIRONMENT }}
+  MATCHAPI_ID: {{ .Values.matchapi_id | quote }}
+  CONFIG__DEBUG: {{ .Values.CONFIG__DEBUG | quote }}
+  CONFIG__unit_conversions: {{ .Values.CONFIG__unit_conversions | quote }}
+  CONFIG__price_reject_a: {{ .Values.CONFIG__price_reject_a | quote }}
+  CONFIG__price_reject_b: {{ .Values.CONFIG__price_reject_b | quote }}
+  CONFIG__price_reject_c: {{ .Values.CONFIG__price_reject_c | quote }}
+  MLFLOW_S3_ENDPOINT_URL: {{ .Values.mlflow.mlflow_s3_endpoint_url | quote }}
+  MLFLOW_TRACKING_URI: {{ .Values.mlflow.mlflow_tracking_uri | quote }}
+  MLFLOW_TRACKING_INSECURE_TLS: {{ .Values.mlflow.mlflow_tracking_insecure_tls | quote }}
+  USE_ATTRIBUTE_CHECK: {{ .Values.USE_ATTRIBUTE_CHECK | quote }}

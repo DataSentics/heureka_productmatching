@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "workflow"
+version = "0.1.0"
+description = ""
+authors = ["Team Purple <purpledevs@heureka.cz>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pybind11 = "2.5.0"
+boto3 = "1.12.49"
+mlflow = "1.8.0"
+kubernetes = "11.0.0"
+slack-webhook = "1.0.3"
+
+[tool.poetry.dev-dependencies]
+
+[[tool.poetry.source]]
+name = "heureka-prod"
+url = "https://pypi.heu.cz/root/production/+simple/"
+default = true
+
+[[tool.poetry.source]]
+name = "heureka-dev"
+url = "https://pypi.heu.cz/root/dev/+simple/"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

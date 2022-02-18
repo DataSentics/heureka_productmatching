@@ -1,0 +1,22 @@
+version: '3'
+services:
+  candy:
+    image: candy:latest
+    volumes:
+      - "./:/app"
+    env_file:
+      - "secrets.env"
+
+  tests:
+    image: candy:latest
+    volumes:
+      - "./:/app"
+
+  extract:
+    image: candy:latest
+    volumes:
+      - "./:/app"
+
+  matching_rerun:
+    volumes:
+      - "./:/app"

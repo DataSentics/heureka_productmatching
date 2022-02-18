@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "workflow.fullname" . }}-configmap
+  namespace: {{ .Release.Namespace }}
+data:
+  IMAGE_TAG: {{ .Values.IMAGE_TAG | quote }}
+  GITLAB_USER_NAME: {{ .Values.GITLAB_USER_NAME | quote }}
+  COLLECTOR_CATEGORIES: {{ .Values.COLLECTOR_CATEGORIES | quote }}
+  {{ if .Values.PRODUCT_STATUSES }}
+  PRODUCT_STATUSES: {{ .Values.PRODUCT_STATUSES | quote }}
+  {{ end }}
+  {{ if .Values.COLLECTOR_MAX_PRODUCTS }}
+  COLLECTOR_MAX_PRODUCTS: {{ .Values.COLLECTOR_MAX_PRODUCTS | quote }}
+  {{ end }}
+  {{ if .Values.EVALUATION_SEARCH_THRESHOLD }}
+  EVALUATION_SEARCH_THRESHOLD: {{ .Values.EVALUATION_SEARCH_THRESHOLD | quote }}
+  {{ end }}
+  {{ if .Values.EVALUATION_SEARCH_MAX_CANDIDATES }}
+  EVALUATION_SEARCH_MAX_CANDIDATES: {{ .Values.EVALUATION_SEARCH_MAX_CANDIDATES | quote }}
+  {{ end }}
+  {{ if .Values.EVALUATION_KEYWORDS }}
+  EVALUATION_KEYWORDS: {{ .Values.EVALUATION_KEYWORDS | quote }}
+  {{ end }}
+  {{ if .Values.EVALUATION_CANDIDATES_SOURCES }}
+  EVALUATION_CANDIDATES_SOURCES: {{ .Values.EVALUATION_CANDIDATES_SOURCES | quote }}
+  {{ end }}
+  MAX_XGB_SAMPLE_OFFERS_PER_PRODUCT: {{ .Values.MAX_XGB_SAMPLE_OFFERS_PER_PRODUCT | quote }}
+  EXTRA_XGB_FEATURES: {{ .Values.EXTRA_XGB_FEATURES | quote }}
+  TRANSFORMER_API_URL: {{ .Values.TRANSFORMER_API_URL | quote }}
+  {{ if .Values.USE_TRANSFORMER_API }}
+  USE_TRANSFORMER_API: {{ .Values.USE_TRANSFORMER_API | quote }}
+  {{ end }}
+  {{ if .Values.CACHE_ADDRESS }}
+  CACHE_ADDRESS: {{ .Values.CACHE_ADDRESS | quote }}
+  {{ end }}
+  PRECEDING_CACHE_ADDRESS: {{ .Values.PRECEDING_CACHE_ADDRESS | quote }}
+  VALIDATION_EXCEL_TO_COMPARE_ADDRESS: {{ .Values.VALIDATION_EXCEL_TO_COMPARE_ADDRESS | quote }}
+  {{ if .Values.GOOGLE_SERVICE_ACCOUNT }}
+  GOOGLE_SERVICE_ACCOUNT: {{ .Values.GOOGLE_SERVICE_ACCOUNT | quote }}
+  {{ end }}
+  {{ if .Values.GOOGLE_APPLICATION_CREDENTIALS }}
+  GOOGLE_APPLICATION_CREDENTIALS: {{ .Values.GOOGLE_APPLICATION_CREDENTIALS | quote }}
+  {{ end }}
+  {{ if .Values.VAULT_TOKEN }}
+  VAULT_TOKEN: {{ .Values.VAULT_TOKEN | quote }}
+  {{ end }}
+  {{ if .Values.DEXTER_DB_PASSWORD }}
+  DEXTER_DB_PASSWORD: {{ .Values.DEXTER_DB_PASSWORD | quote }}
+  {{ end }}
+  {{ if .Values.REGISTER_MODEL }}
+  REGISTER_MODEL: {{ .Values.REGISTER_MODEL | quote }}
+  {{ end }}
+  {{ if .Values.KAFKA_BOOTSTRAP_SERVERS }}
+  KAFKA_BOOTSTRAP_SERVERS: {{ .Values.KAFKA_BOOTSTRAP_SERVERS | quote }}
+  {{ end }}
+  {{ if .Values.REINSTALL_MATCHAPIS_ENVS }}
+  REINSTALL_MATCHAPIS_ENVS: {{ .Values.REINSTALL_MATCHAPIS_ENVS | quote }}
+  {{ end }}
+  RETRAIN_RUN: {{ .Values.RETRAIN_RUN | quote }}
+  TRIGGER_TOKEN: {{ .Values.TRIGGER_TOKEN | quote }}
+  REF: {{ .Values.REF | quote }}
+  WORKFLOW_ID: {{ .Values.WORKFLOW_ID | quote }}
+  {{ if .Values.USE_GCP_ELASTIC }}
+  USE_GCP_ELASTIC: {{ .Values.USE_GCP_ELASTIC | quote }}
+  {{ end }}
+  {{ if .Values.KUBE_ELASTIC_ADDRESS }}
+  KUBE_ELASTIC_ADDRESS: {{ .Values.KUBE_ELASTIC_ADDRESS | quote }}
+  {{ end }}
+  STATIC_DATASETS_INFO_FILE: {{ .Values.STATIC_DATASETS_INFO_FILE | quote }}
+  STATIC_DATASETS_BUCKET: {{ .Values.STATIC_DATASETS_BUCKET | quote }}
+  USE_STATIC_DATASET: {{ .Values.USE_STATIC_DATASET | quote }}
+  CANDIDATES_RETRIEVAL_SEARCH_THRESHOLD: {{ .Values.CANDIDATES_RETRIEVAL_SEARCH_THRESHOLD | quote }}
+  CANDIDATES_RETRIEVAL_SEARCH_MAX_CANDIDATES: {{ .Values.CANDIDATES_RETRIEVAL_SEARCH_MAX_CANDIDATES | quote }}
+  CANDIDATES_RETRIEVAL_SOURCES: {{ .Values.CANDIDATES_RETRIEVAL_SOURCES | quote }}
+  XGB_DATA_CANDIDATES_SOURCES: {{ .Values.XGB_DATA_CANDIDATES_SOURCES | quote }}
+  MATCHED_CONFIDENCE_THRESHOLD: {{ .Values.MATCHED_CONFIDENCE_THRESHOLD | quote }}
+  PRECISION_CONFIDENCE_THRESHOLD: {{ .Values.PRECISION_CONFIDENCE_THRESHOLD | quote }}  
+  PER_CATEGORY_RESULTS_TO_COMPARE_ADDRESS: {{ .Values.PER_CATEGORY_RESULTS_TO_COMPARE_ADDRESS | quote }}  
+  STATIC_DATASET_VERSION: {{ .Values.STATIC_DATASET_VERSION | quote }}
+  USE_ATTRIBUTE_CHECK: {{ .Values.USE_ATTRIBUTE_CHECK | quote }}
+  {{ if .Values.WORKFLOW_TO_RUN }}
+  WORKFLOW_TO_RUN: {{ .Values.WORKFLOW_TO_RUN | quote }}
+  {{ end }}

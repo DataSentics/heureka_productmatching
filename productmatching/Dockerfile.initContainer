@@ -1,0 +1,12 @@
+FROM alpine:3.12.0
+
+WORKDIR /init-container
+
+# Download and install s3cmd with fixed Python 3.6+ support
+RUN apk add --no-cache git py-pip && pip install git+https://github.com/s3tools/s3cmd.git@92a9c79b5a505d66ff25b661ef9c5191d9985252 && \
+    mkdir -p /data/
+
+COPY ./init/download.sh ./
+RUN chmod +x ./download.sh
+
+CMD ["./download.sh"]

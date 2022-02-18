@@ -1,0 +1,25 @@
+# Default values for chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+resources:
+  limits:
+    cpu: 10m
+    memory: 5M
+  requests:
+    cpu: 10m
+    memory: 5M
+
+volumes:
+  dataPath: /app/data/
+
+s3:
+  host: s3.heu.cz
+  hostBucket: s3.heu.cz
+  accessKey: ""
+  secretKey: ""
+  files: >
+    s3://matchapi-data-oc-stage/matchapi_id_categories_mapping.json
+
+LANGUAGE: oc
+ENVIRONMENT: stage

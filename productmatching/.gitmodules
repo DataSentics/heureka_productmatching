@@ -1,0 +1,3 @@
+[submodule "resources/candy"]
+	path = resources/candy
+	url = ../candy.git

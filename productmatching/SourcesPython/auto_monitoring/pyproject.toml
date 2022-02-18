@@ -1,0 +1,51 @@
+[tool.poetry]
+name = "auto_monitoring"
+version = "0.1.0"
+description = ""
+authors = ["Team Purple <purpledevs@heureka.cz>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pybind11 = "2.5.0"
+boto3 = "1.12.49"
+mlflow = "1.10.0"
+buttstrap = "3.4.2"
+llconfig = "1.0.1"
+db_pool = "3.2.2"
+aiomysql = "0.0.21"
+consul-service = "4.1.0"
+tenacity = "6.2.0"
+httpx = "0.16.1"
+aiohttp = "3.7.3"
+url_generator = "1.0.0"
+pandas = "1.1.0"
+openpyxl = "3.0.6"
+opsgenie-sdk = "2.0.1"
+slack-webhook = "^1.0.3"
+matching-common = "0.4.2"
+occommon = "1.6.1"
+pydantic = "1.8.1"
+Unidecode = "1.1.1"
+nltk = "3.5"
+scipy = "1.5.4"
+matplotlib = "3.3.0"
+seaborn = "0.10.1"
+scikit-learn = "0.23.2"
+shap = "0.39.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^4.4"
+pytest-asyncio = "^0.10.0"
+
+[[tool.poetry.source]]
+name = "heureka-prod"
+url = "https://pypi.heu.cz/root/production/+simple/"
+default = true
+
+[[tool.poetry.source]]
+name = "heureka-dev"
+url = "https://pypi.heu.cz/root/dev/+simple/"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

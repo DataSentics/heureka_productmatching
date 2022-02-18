@@ -1,0 +1,4 @@
+Ingresses
+{{- range .Values.ingress.hosts }}
+  http://{{ . }}{{ $.Values.ingress.path }}
+{{- end }}

@@ -1,0 +1,60 @@
+extract_cz:
+  stage: test
+  before_script:
+    - rm /root/.kube/config; cp /secrets/secrets/.kube-config /root/.kube/config
+    - kubectl config set-credentials stage --token="$KUBE_TOKEN_STAGE"
+  script:
+    - echo "$HELM_VALUES_STAGE_CZ" > /tmp/values.yaml
+    - helm3 dependency build chart/
+    - helm3 upgrade
+        --namespace="$CI_NAMESPACE"
+        --install
+        --wait
+        --set image.repository="$IMAGE"
+        --set image.tag="$TAG"
+        --set jobs.enabled=true
+        --set vault.token="$VAULT_TOKEN_STAGE"
+        --values /tmp/values.yaml
+        --kube-context stage
+        "$DEPLOY_NAME-$CI_COMMIT_REF_SLUG-cz" chart/
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+  only:
+    refs:
+      - branches
+  when: manual
+
+extract_sk:
+  extends: extract_cz
+  script:
+    - echo "$HELM_VALUES_STAGE_SK" > /tmp/values.yaml
+    - helm3 dependency build chart/
+    - helm3 upgrade
+        --namespace="$CI_NAMESPACE"
+        --install
+        --wait
+        --set image.repository="$IMAGE"
+        --set image.tag="$TAG"
+        --set jobs.enabled=true
+        --set vault.token="$VAULT_TOKEN_STAGE"
+        --values /tmp/values.yaml
+        --kube-context stage
+        "$DEPLOY_NAME-$CI_COMMIT_REF_SLUG-sk" chart/
+
+clean_jobs:
+  stage: cleanup
+  variables:
+    GIT_STRATEGY: none
+  before_script:
+    - rm /root/.kube/config; cp /secrets/secrets/.kube-config /root/.kube/config
+    - kubectl config set-credentials stage --token="$KUBE_TOKEN_STAGE"
+  script:
+    - kubectl --context stage --namespace="$CI_NAMESPACE" delete jobs --field-selector status.successful=1 || exit 0
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    action: stop
+  when: manual
+  allow_failure: true
+  only:
+    refs:
+      - branches
